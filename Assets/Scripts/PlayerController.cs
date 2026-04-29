@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     public float fireRate = 0.2f;
     private float nextFireTime = 0f;
 
+    public MuzzleFlash muzzleFlash;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -48,5 +50,7 @@ public class PlayerController : MonoBehaviour
     void Shoot()
     {
         ObjectPool.instance.SpawnFromPool("Bullet", firePoint.position, firePoint.rotation);
+        if (muzzleFlash != null)
+            muzzleFlash.Flash();
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
@@ -27,10 +28,31 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damageAmount)
     {
         health -= damageAmount;
+
+        // Flash white when hit
+        StartCoroutine(FlashWhite());
+
         if (health <= 0)
         {
-            Destroy(gameObject);
+            Die();
         }
+    }
+
+    IEnumerator FlashWhite()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        Color original = sr.color;
+        sr.color = Color.white;
+        yield return new WaitForSeconds(0.05f);
+        sr.color = original;
+    }
+
+    void Die()
+    {
+        CameraShake.instance.Shake(0.1f, 0.15f);
+        Destroy(gameObject);
+        if (GameManager.instance != null)
+            GameManager.instance.AddScore(10);
     }
 
     void OnTriggerEnter2D(Collider2D other)
