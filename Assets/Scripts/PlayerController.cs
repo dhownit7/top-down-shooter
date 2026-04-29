@@ -7,6 +7,11 @@ public class PlayerController : MonoBehaviour
     private Vector2 movement;
     private Vector2 mousePos;
 
+    public GameObject bulletPrefab;
+    public Transform firePoint;
+    public float fireRate = 0.2f;
+    private float nextFireTime = 0f;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -20,6 +25,13 @@ public class PlayerController : MonoBehaviour
 
         // Mouse position for aiming
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        // Shooting
+        if (Input.GetButton("Fire1") && Time.time >= nextFireTime)
+        {
+            Shoot();
+            nextFireTime = Time.time + fireRate;
+        }
     }
 
     void FixedUpdate()
@@ -31,5 +43,10 @@ public class PlayerController : MonoBehaviour
         Vector2 lookDir = mousePos - rb.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         rb.rotation = angle;
+    }
+
+    void Shoot()
+    {
+        ObjectPool.instance.SpawnFromPool("Bullet", firePoint.position, firePoint.rotation);
     }
 }
