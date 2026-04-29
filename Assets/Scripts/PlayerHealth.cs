@@ -27,6 +27,14 @@ public class PlayerHealth : MonoBehaviour
         CameraShake.instance.Shake(0.15f, 0.2f);
     }
 
+    public void Heal(int amount)
+    {
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+
+        if (GameManager.instance != null)
+            GameManager.instance.UpdateHealth(currentHealth);
+    }
+
     void Die()
     {
         Debug.Log("Player Died!");

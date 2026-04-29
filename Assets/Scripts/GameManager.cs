@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,21 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
     private int score = 0;
     private int highScore = 0;
+
+    public TextMeshProUGUI waveNotificationText;
+
+    public void ShowWaveNotification(int wave)
+    {
+        StartCoroutine(WaveNotificationCoroutine(wave));
+    }
+
+    IEnumerator WaveNotificationCoroutine(int wave)
+    {
+        waveNotificationText.gameObject.SetActive(true);
+        waveNotificationText.text = "WAVE " + wave;
+        yield return new WaitForSeconds(2f);
+        waveNotificationText.gameObject.SetActive(false);
+    }
 
     void Awake()
     {
@@ -62,4 +78,5 @@ public class GameManager : MonoBehaviour
     {
         scoreText.text = "Score: 0\nHigh: " + highScore;
     }
+
 }
