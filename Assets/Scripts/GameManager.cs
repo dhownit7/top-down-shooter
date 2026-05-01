@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
 
     public TextMeshProUGUI waveNotificationText;
 
+    public GameObject pauseMenu;
+    private bool isPaused = false;
+
     public void ShowWaveNotification(int wave)
     {
         StartCoroutine(WaveNotificationCoroutine(wave));
@@ -38,13 +41,41 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        // Pause toggle
+        if (Input.GetKeyDown(KeyCode.Escape) && !gameOverText.gameObject.activeSelf)
+        {
+            if (isPaused)
+                Resume();
+            else
+                Pause();
+        }
+
+        // Restart from game over
         if (gameOverText.gameObject.activeSelf && Input.GetKeyDown(KeyCode.R))
         {
             Time.timeScale = 1f;
-            UnityEngine.SceneManagement.SceneManager.LoadScene(
-                UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
-            );
+            SceneManager.LoadScene("MainMenu");
         }
+    }
+
+    public void Pause()
+    {
+        pauseMenu.SetActive(true);
+        Time.timeScale = 0f;
+        isPaused = true;
+    }
+
+    public void Resume()
+    {
+        pauseMenu.SetActive(false);
+        Time.timeScale = 1f;
+        isPaused = false;
+    }
+
+    public void MainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void UpdateHealth(int health)
